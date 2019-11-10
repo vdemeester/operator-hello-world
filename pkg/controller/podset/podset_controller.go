@@ -179,7 +179,7 @@ func newPodForCR(cr *appv1alpha1.PodSet) *corev1.Pod {
 	}
 	return &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      cr.Name + "-pod",
+			GenerateName:      cr.Name + "-pod",
 			Namespace: cr.Namespace,
 			Labels:    labels,
 		},
