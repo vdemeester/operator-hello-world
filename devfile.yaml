@@ -1,0 +1,55 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: operator-hello-world
+projects:
+- name: operator-hello-world
+  source:
+    type: git
+    location: https://github.com/l0rd/operator-hello-world.git
+  clonePath: src/github.com/l0rd/operator-hello-world/
+components:
+- type: chePlugin
+  id: ms-vscode/go/latest
+  alias: go-plugin
+  memoryLimit: 512Mi
+- type: dockerimage
+  # this image uses the same golang version used by the plugin (v1.12)
+  image: mariolet/operator-sdk@sha256:0c580432ba7daa13bb57d1c1d535dc336f3a10bb986076a722bcdc5cc6890c59
+  alias: go-cli
+  env:
+    - name: GOCACHE
+      # replicate the GOCACHE from the plugin, even though the cache is not shared
+      # between the two
+      value: /tmp/.cache
+  memoryLimit: 1024Mi
+  mountSources: true
+commands:
+- name: build the operator
+  actions:
+  - type: exec
+    component: go-cli
+    command: operator-sdk build mariolet/podset-operator
+    workdir: ${CHE_PROJECTS_ROOT}/src/github.com/l0rd/operator-hello-world/
+- name: test the operator
+  actions:
+  - type: exec
+    component: go-cli
+    command: operator-sdk test
+    workdir: ${CHE_PROJECTS_ROOT}/src/github.com/l0rd/operator-hello-world/
+- name: Debug current file
+  actions:
+  - type: vscode-launch
+    referenceContent: |
+      {
+        "version": "0.2.0",
+        "configurations": [
+          {
+            "name": "Debug current file",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}",
+          },
+        ]
+      }

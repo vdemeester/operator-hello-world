@@ -16,7 +16,7 @@ spec:
       containers:
         - name: podset-operator
           # Replace this with the built image name
-          image: REPLACE_IMAGE
+          image: docker.io/mariolet/podset-operator@sha256:94e5e0dc30f159b0b7a04a2ad4ed063910093a692d20b4795cc4d9020667e020
           command:
           - podset-operator
           imagePullPolicy: Always
