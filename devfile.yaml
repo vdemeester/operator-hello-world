@@ -15,7 +15,7 @@ components:
   memoryLimit: 512Mi
 - type: dockerimage
   # this image uses the same golang version used by the plugin (v1.12)
-  image: mariolet/operator-sdk@sha256:0c580432ba7daa13bb57d1c1d535dc336f3a10bb986076a722bcdc5cc6890c59
+  image: mariolet/operator-sdk@sha256:ab49c1d42e3dbd31f8eb12e63f7105133f7d87eaec5a0a13efd01115c297a9e1
   alias: go-cli
   env:
     - name: GOCACHE

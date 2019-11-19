@@ -30,15 +30,7 @@ RUN curl -sLO ${KUBECTL_RELEASE_URL}/${KUBECTL_VERSION}/bin/linux/amd64/kubectl 
 USER 0
 # Set permissions on /etc/passwd and /home to allow arbitrary users to write
 COPY [--chown=0:0] entrypoint.dev.sh /
-RUN mkdir -p /home/${DEVELOPER} && chgrp -R 0 /home && chmod -R g=u /etc/passwd /home && chmod +x /entrypoint.dev.sh
-
-RUN git clone https://github.com/l0rd/operator-hello-world.git /tmp/src/github.com/l0rd/operator-hello-world/ && \
-  cd /tmp/src/github.com/l0rd/operator-hello-world && \
-  go build -o /tmp/src/github.com/l0rd/operator-hello-world/build/_output/bin/operator-hello-world \
-     -gcflags all=-trimpath=/tmp/src/github.com/l0rd \
-     -asmflags all=-trimpath=/tmp/src/github.com/l0rd \
-     github.com/l0rd/operator-hello-world/cmd/manager && \
-  rm -rf /tmp/src
+RUN mkdir -p /home/${DEVELOPER} && chgrp -R 0 /home && chmod -R g=u /etc/passwd /home /go && chmod +x /entrypoint.dev.sh
 
 # Change to developer user
 WORKDIR /home/${DEVELOPER}
@@ -62,3 +54,12 @@ ENV HOME=/home/${DEVELOPER}
 WORKDIR /projects
 ENTRYPOINT [ "/entrypoint.dev.sh" ]
 CMD ["tail", "-f", "/dev/null"]
+
+ENV GOCACHE=/tmp/.cache
+RUN git clone https://github.com/l0rd/operator-hello-world.git /tmp/src/github.com/l0rd/operator-hello-world/ && \
+  cd /tmp/src/github.com/l0rd/operator-hello-world && \
+  go build -o /tmp/src/github.com/l0rd/operator-hello-world/build/_output/bin/operator-hello-world \
+     -gcflags all=-trimpath=/tmp/src/github.com/l0rd \
+     -asmflags all=-trimpath=/tmp/src/github.com/l0rd \
+     github.com/l0rd/operator-hello-world/cmd/manager && \
+  rm -rf /tmp/src
