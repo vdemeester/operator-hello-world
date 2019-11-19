@@ -55,8 +55,6 @@ spec:
   replicas: 3" | oc create -f -
 ```
 
-
-
 ### Build the operator
 
 ```bash
@@ -85,3 +83,4 @@ go build -o /projects/src/github.com/l0rd/operator-hello-world/build/_output/bin
 - [ ] We should have a script to pre pull all needed images
 - [ ] Setup the powershell PS1
 - [ ] Setup the factory link
+- [ ] upgrade operator-sdk to latest
