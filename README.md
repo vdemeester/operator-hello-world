@@ -1,5 +1,14 @@
 # Operator Sample for Che
 
+## Developer Workspace
+
+[![Contribute](https://che.openshift.io/factory/resources/factory-contribute.svg)](https://che.openshift.io/f?url=https://raw.githubusercontent.com/l0rd/operator-hello-world/master/devfile.yaml)
+
+This Che Factory can also be invoked with any host:
+{hostURL}/f?url=https://github.com/l0rd/operator-hello-world/
+It will read the `devfile.yaml` from the repository to instanciate the developer workspace.
+
+
 ## Instructions to run the demo
 
 ### Start the workspace
@@ -52,14 +61,14 @@ kind: PodSet
 metadata:
   name: example-podset
 spec:
-  replicas: 3" | oc create -f -
+  replicas: 3" | kubectl create -f -
 ```
 
 ### Build the operator
 
 ```bash
 # Using the operator SDK
-operator-sdk build mariolet/podset-operator
+operator-sdk build --image-builder buildah mariolet/podset-operator
 
 # Go Build
 go build -o /projects/src/github.com/l0rd/operator-hello-world/build/_output/bin/operator-hello-world \
