@@ -75,8 +75,10 @@ kubectl create -f deploy/operator.yaml
 
 ```bash
 # Look for the podset api
+kubectl api-resources
 
 # Get the podsets (there should be no podset)
+kubectl get podset
 
 # Create a podSet
 echo "apiVersion: app.example.com/v1alpha1
@@ -87,13 +89,16 @@ spec:
   replicas: 3" | kubectl create -f -
 
 # Get the podset again (there should be one)
+kubectl get podset
 
 # Get the pods (there should be a lot) ==> the bug to fix
+kubectl get pod
 
 # Delete the podset
+kubectl delete podset example-podset
 
 # Scaled down the operator deployment
-kubectl scale --replicas=0 deploy
+kubectl scale --replicas=0 deploy podset-operator
 ```
 
 ### Fix the bug using a Che wokrspace
