@@ -110,7 +110,7 @@ https://github.com/l0rd/operator-hello-world
 #### Switch to the local workspace because che.openshift.io takes time to load and doesn't have enough resources
 
 - Show the source code
-- Build and run the operator `operator-sdk up --kubeconfig ~/.kube/config --namespace default`
+- Build and run the operator `operator-sdk up local --kubeconfig ~/.kube/config --namespace default`
 - Reproduce the error
 - Fix in code, rebuild and run and verify that we have mitigated the problem (no pod are started)
 
