@@ -25,17 +25,11 @@ components:
   memoryLimit: 1024Mi
   mountSources: true
 commands:
-- name: build the operator
+- name: build and run the operator
   actions:
   - type: exec
     component: go-cli
-    command: operator-sdk build mariolet/podset-operator
-    workdir: ${CHE_PROJECTS_ROOT}/src/github.com/l0rd/operator-hello-world/
-- name: test the operator
-  actions:
-  - type: exec
-    component: go-cli
-    command: operator-sdk test
+    command: operator-sdk up local --verbose --kubeconfig ~/.kube/config --namespace default
     workdir: ${CHE_PROJECTS_ROOT}/src/github.com/l0rd/operator-hello-world/
 - name: Debug current file
   actions:

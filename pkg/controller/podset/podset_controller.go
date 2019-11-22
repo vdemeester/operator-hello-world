@@ -103,7 +103,6 @@ func (r *ReconcilePodSet) Reconcile(request reconcile.Request) (reconcile.Result
 	// List all pods owned by this PodSet instance
 	lbls := map[string]string{
 		"app":     podSet.Name,
-		"version": "v0.1",
 	}
 	existingPods := &corev1.PodList{}
 	err = r.client.List(context.TODO(),

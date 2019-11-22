@@ -12,7 +12,29 @@ It will read the `devfile.yaml` from the repository to instanciate the developer
 
 The following paragraphs describe how to setup and run a demo that shows how to develop this operator within Che.
 
+The demo can be preceded by a short Che presentation ([slides](https://docs.google.com/presentation/d/19iAl2admu9fTrnVaTYxoDE43qvJ0ij9OM9NukcGyUDs/edit?usp=sharing))
+
 ### SETUP
+
+#### Build the operator-sdk image
+
+WARNING: the resulting image is > 4GB!! The build clones the operator source code and does a build of it. During the build all the go dependencies are downloaded. That saves a lot of time during the demo but makes the image uge.
+
+WARNING: this should be done the day before the demo or the same day so that the image has all the operator dependencies already downloaded.
+
+```bash
+docker build -t mariolet/operator-sdk:0.11.0 -f build/Dockerfile.dev ./build
+docker push mariolet/operator-sdk:0.11.0
+```
+
+Once you have build and push it you should replace the image reference in the `devfile.yaml`
+
+Something that may be useful is to pull the image locally:
+
+```bash
+eval $(minkube docker-env)
+docker pull mariolet/operator-sdk:<SHA256 DIGEST>
+```
 
 #### Start the k8s cluster (minikube) and start Che
 
@@ -71,7 +93,7 @@ kubectl create -f deploy/operator.yaml
 
 ### DEMO
 
-#### Test the operator
+#### Show the podset operator
 
 ```bash
 # Look for the podset api
@@ -91,7 +113,7 @@ spec:
 # Get the podset again (there should be one)
 kubectl get podset
 
-# Get the pods (there should be a lot) ==> the bug to fix
+# Get the pods (there should be a lot)
 kubectl get pod
 
 # Delete the podset
@@ -110,9 +132,9 @@ https://github.com/l0rd/operator-hello-world
 #### Switch to the local workspace because che.openshift.io takes time to load and doesn't have enough resources
 
 - Show the source code
-- Build and run the operator `operator-sdk up local --kubeconfig ~/.kube/config --namespace default`
-- Reproduce the error
-- Fix in code, rebuild and run and verify that we have mitigated the problem (no pod are started)
+- Build and run the operator using the corresponding task
+- Change the code
+- Rebuild and run and verify that the changes to the controller have been taken into account
 
 ### Old stuff
 
@@ -121,6 +143,13 @@ https://github.com/l0rd/operator-hello-world
 ```bash
 # Using the operator SDK
 operator-sdk build --image-builder buildah mariolet/podset-operator
+
+# Using buildah
+buildah bud --format=docker --isolation=chroot -f build/Dockerfile -t mariolet/podset-operator .
+
+buildah bud --format=docker -f build/Dockerfile -t mariolet/podset-operator .
+
+buildah bud --security-opt label=disable --security-opt seccomp=unconfined --format=docker --isolation=chroot -f build/Dockerfile -t mariolet/podset-operator .
 ```
 
 #### Go build of the operator
@@ -136,8 +165,7 @@ go build -o /projects/src/github.com/l0rd/operator-hello-world/build/_output/bin
 
 ### Blockers
 
-- [ ] The operator, when deployed do not work as expected
-- [ ] The build of the operator image does not work from Che
+- [ ] Investigate why the build of the operator image with buildah doesn't work in a Che container
 
 ### Nice to have
 
