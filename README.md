@@ -32,7 +32,7 @@ Once you have build and push it you should replace the image reference in the `d
 Something that may be useful is to pull the image locally:
 
 ```bash
-eval $(minkube docker-env)
+eval $(minikube docker-env)
 docker pull mariolet/operator-sdk:<SHA256 DIGEST>
 ```
 
@@ -174,5 +174,4 @@ go build -o /projects/src/github.com/l0rd/operator-hello-world/build/_output/bin
 - [ ] We should write down instructions to set imagePullStrategy to never for all workspaces components
 - [ ] We should have a script to pre pull all needed images
 - [ ] Setup the powershell PS1
-- [ ] Setup the factory link
 - [ ] upgrade operator-sdk to latest
