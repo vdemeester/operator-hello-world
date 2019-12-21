@@ -32,8 +32,9 @@ Once you have build and push it you should replace the image reference in the `d
 Something that may be useful is to pull the image locally:
 
 ```bash
+SHA256=<the image digest>
 eval $(minikube docker-env)
-docker pull mariolet/operator-sdk:<SHA256 DIGEST>
+docker pull mariolet/operator-sdk@sha256:${SHA256}
 ```
 
 #### Start the k8s cluster (minikube) and start Che
@@ -45,12 +46,18 @@ mk
 # Start che
 chectl server:start --platform=minikube --installer=helm
 
-# Edit the run as user
+# Change the run as user
 kubens che
-k edit cm/che # <- CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP = 0
-              #    CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_RUN__AS__USER = 0
-k scale --replicas=0 deployment/che
-k scale --replicas=1 deployment/che
+
+# Update the default uid: the default is 1724, set it to zero instead
+k patch cm/che -p '{"data":{"CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_FS__GROUP":"0", "CHE_INFRA_KUBERNETES_POD_SECURITY__CONTEXT_RUN__AS__USER":"0"}}'
+
+# Every user should have his own namespace
+k patch cm/che -p '{"data":{"CHE_INFRA_KUBERNETES_NAMESPACE_DEFAULT":"che-<username>"}}'
+k create namespace che-${USERNAME}
+
+# Restart Che
+k rollout restart deploy/che
 ```
 
 #### Start a local workspace
