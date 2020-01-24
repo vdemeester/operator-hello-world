@@ -10,7 +10,7 @@ projects:
   clonePath: src/github.com/l0rd/operator-hello-world/
 components:
 - type: kubernetes
-  reference: https://raw.githubusercontent.com/moby/buildkit/master/examples/kubernetes/pod.rootless.yaml
+  reference: https://raw.githubusercontent.com/vdemeester/buildkit/highe-uid/examples/kubernetes/pod.rootless.yaml
   alias: buildkit
 - type: chePlugin
   id: ms-vscode/go/latest
